@@ -69,6 +69,12 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
         errorsFound.append("If a non-zero value is provided for the number of CV folds, then the number must be at least two.")
     # TODO add checking that the cvMethod is one of "MSE", "EqualError" or a user supplied function meeting some to be decided criteria
 
+    # Exit if errors were found.
+    if errorsFound:
+        print("\n\nThe following errors were encountered while parsing the input parameters:\n")
+        print('\n'.join(errorsFound))
+        sys.exit()
+
     ###############################
     # Run appropriate PLS method. #
     ###############################
