@@ -21,6 +21,7 @@ def simpls(X, Y, numberComponents=10):
         # There is only one response variable (PLS1).
         numObservationsY = Y.shape[0]
         numResponses = 1
+        Y = Y.reshape(numObservationsY, 1)  # Ensure that Y is a column vector.
     else:
         # There are multiple response variables (PLS2).
         [numObservationsY, numResponses] = Y.shape
@@ -45,7 +46,7 @@ def simpls(X, Y, numberComponents=10):
     # Each new basis vector can be removed from Cov separately.
     V = numpy.matrix(numpy.zeros((numPredictors, numberComponents)))
 
-    Cov = (X.T).dot(Y)
+    Cov = numpy.matrix((X.T).dot(Y))
     for i in range(numberComponents):
         # Find unit length ti=X0*ri and ui=Y0*ci whose covariance, ri'*X0'*Y0*ci, is
         # jointly maximized, subject to ti'*tj=0 for j=1:(i-1).
