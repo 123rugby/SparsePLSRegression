@@ -1,6 +1,7 @@
 import argparse
 import numpy
 import PLS.simpls
+import random
 
 def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=True, isMemUsed=True):
     """Perform PLS using the SIMPLS algorithm.
@@ -25,6 +26,10 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
     :type :
 
     If CV is used, then it will return the partitioning
+    Stratified partitioning only makes sense in cases of classification
+        For PLS1, observations will be grouped by their response value (the number of groups will be the number of unique response values)
+        For PLS2, each response variable will be treated as a class. Observations will be grouped based on nonzero values in the response variable.
+            If an observation has a nonzeo value for more than one response variable and error will be thrown.
 
     """
 
@@ -138,6 +143,11 @@ def pls_cv_mem(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratif
     :returns :
     :type :
 
+    Stratified partitioning only makes sense in cases of classification
+        For PLS1, observations will be grouped by their response value (the number of groups will be the number of unique response values)
+        For PLS2, each response variable will be treated as a class. Observations will be grouped based on nonzero values in the response variable.
+            If an observation has a nonzeo value for more than one response variable and error will be thrown.
+
     """
 
     # Determine dimensions of inputs.
@@ -152,6 +162,22 @@ def pls_cv_mem(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratif
         [numObservationsY, numResponses] = Y.shape
 
     # Generate the cross validation partitions.
+    if isCVStratified:
+        # Create stratified partitions.
+        pass
+    else:
+        # Create random partitions where each partition has an equal number of observations.
+        # Start with a list of the indices of the observations ->  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        # Randomise the list -> [7, 4, 8, 1, 5, 6, 9, 2, 3, 0]
+        # Partition the indices -> [[7, 1, 9, 0], [4, 5, 2], [8, 6, 3]] (if cvFolds == 3)
+        # Assign partition groupings according to original indices -> [0, 0, 1, 2, 1, 1, 2, 0, 2, 0]
+        observationIndices = list(range(numObservationsX))  # List containing the index of each observation.
+        random.shuffle(observationIndices)  # Randomise the order of the indices.
+        partitionedIndices = [observationIndices[i::cvFolds] for i in range(cvFolds)]  # Populate each partition with every nth observation.
+        partition = [0] * numObservationsX  # Create the list to hold the partition number for each observation.
+        for ind, i in enumerate(partitionIndices):
+            for j in i:
+                partition[j] = ind
 
     # As each CV fold is smaller than the full dataset, it may not be possible to use the number of components requested.
     # Determine this and use as many as we can.
