@@ -4,7 +4,7 @@ from scipy import sparse
 import unittest
 
 class CompletionTests(unittest.TestCase):
-    """Tests checking whether the code doesn't crash while running PLS1."""
+    """Tests checking whether the code successfully returns while running PLS1."""
 
     @classmethod
     def setUpClass(self):
@@ -15,6 +15,13 @@ class CompletionTests(unittest.TestCase):
 
     def test_pass_small(self):
         PLS.main.pls(self.xSmall, self.ySmall)
+
+    # Tests to add
+    # CV stratified and non-stratified
+    # CV with different evaluation metrics (both built in and user supplied)
+    # Parameters being incorrectly specified
+    # Larger matrices
+    # Sparse matrices
 
 
 class CorrectnessTests(unittest.TestCase):
