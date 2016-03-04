@@ -16,7 +16,14 @@ def simpls(X, Y, numberComponents=10):
     
     # Determine dimensions of inputs.
     [numObservations, numPredictors] = X.shape
-    [numObservations, numResponses] = Y.shape
+    yDimensions = Y.shape
+    if len(yDimensions) == 1:
+        # There is only one response variable (PLS1).
+        numObservationsY = Y.shape[0]
+        numResponses = 1
+    else:
+        # There are multiple response variables (PLS2).
+        [numObservationsY, numResponses] = Y.shape
     
     # Initialise outputs.
     xLoadings = numpy.matrix(numpy.zeros((numPredictors, numberComponents)))
