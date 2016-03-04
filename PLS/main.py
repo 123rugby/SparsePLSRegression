@@ -1,9 +1,7 @@
 import argparse
-import collections
 import numpy
 import PLS.partition_dataset
 import PLS.simpls
-import random
 import sys
 
 def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=True, isMemUsed=True):
