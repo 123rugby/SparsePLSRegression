@@ -24,7 +24,7 @@ def simpls(X, Y, numberComponents=10):
         Y = Y.reshape(numObservationsY, 1)  # Ensure that Y is a column vector.
     else:
         # There are multiple response variables (PLS2).
-        [numObservationsY, numResponses] = Y.shape
+        [numObservationsY, numResponses] = yDimensions
     
     # Initialise outputs.
     xLoadings = numpy.matrix(numpy.zeros((numPredictors, numberComponents)))
