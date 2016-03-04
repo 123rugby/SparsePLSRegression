@@ -1,6 +1,6 @@
 import numpy
 import PLS.partition_dataset
-import numpy
+import unittest
 
 class CompletionTests(unittest.TestCase):
     """Tests checking whether the code successfully returns."""
@@ -9,17 +9,20 @@ class CompletionTests(unittest.TestCase):
     def setUpClass(self):
         """Setup inputs needed for tests in the class."""
 
-        self.ySmall = numpy.array([[1, 0], [0, 1], [1, 0]])
+        self.ySmall = numpy.array([[1, 0, 0], [0, 1, 0], [0, 1, 0], [1, 0, 0], [0, 0, 1], [0, 0, 1]])
 
     def test_pass_small(self):
-        partition = PLS.partition_dataset.partition_dataset(self.ySmall, 2)
+        partition = PLS.partition_dataset.partition_dataset(self.ySmall, 2, False)
+        partition = PLS.partition_dataset.partition_dataset(self.ySmall, 2, True)
 
     def test_too_many_folds(self):
-        partition = PLS.partition_dataset.partition_dataset(self.ySmall, 2)
+        partition = PLS.partition_dataset.partition_dataset(self.ySmall, 4, False)
+        partition = PLS.partition_dataset.partition_dataset(self.ySmall, 4, True)
 
     # Tests to add
     # CV stratified and non-stratified
     # Larger matrices
+    # Y matrix with one class (PLS1)
 
 
 class CorrectnessTests(unittest.TestCase):
