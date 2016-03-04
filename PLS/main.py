@@ -5,7 +5,7 @@ import PLS.simpls
 def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=True, isMemUsed=True):
     """Perform PLS using the SIMPLS algorithm.
 
-    Stuff about if X is sparse and you specify isCenter then it will try to make the matrix dense unless isMemUsed is false.
+    Stuff about if X is sparse then it will try to make the matrix dense unless isMemUsed is false.
 
     :param X:
     :type X:
@@ -59,6 +59,7 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
     if isCVUsed and (cvFolds < 2):
         # There must be at least 2 CV folds.
         errorsFound.append("If a non-zero value is provided for the number of CV folds, then the number must be at least two.")
+    # TODO add checking that the cvMethod is one of "MSE", "EqualError" or a user supplied function meeting some to be decided criteria
 
     ###############################
     # Run appropriate PLS method. #
@@ -77,29 +78,40 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
     if isCVUsed:
         # Run PLS using cross validation.
         # TODO put in the cross validation running and determination of folds
-        returnObject = {}
+        if isMemUsed:
+            # Run CV using the memory-based SIMPLS.
+            returnObject = {}
+        else:
+            # Run CV using the file system-based SIMPLS.
+            returnObject = {}
     else:
         # Run PLS without cross validation.
-        xLoadings, yLoadings, xScores, yScores, weights = PLS.simpls.simpls(X, Y, numberComponents)
+        if isMemUsed:
+            # Run SIMPLS without resorting to the file system.
+            xLoadings, yLoadings, xScores, yScores, weights = PLS.simpls.simpls(X, Y, numberComponents)
 
-        # Calculate coefficients.
-        coefficients = weights.dot(yLoadings.T)
-        intercept = meanY - (meanX.dot(coefficients))
-        coefficients = numpy.vstack((intercept, coefficients))
+            # Calculate coefficients.
+            coefficients = weights.dot(yLoadings.T)
+            intercept = meanY - (meanX.dot(coefficients))
+            coefficients = numpy.vstack((intercept, coefficients))
 
-        # Calculate the percentage of the variance of X and Y that is explained.
-        xPercentVarExp = sum(numpy.square(abs(xLoadings))) / sum(sum(numpy.square(abs(X))))
-        yPercentVarExp = sum(numpy.square(abs(yLoadings))) / sum(sum(numpy.square(abs(Y))))
+            # Calculate the percentage of the variance of X and Y that is explained.
+            xPercentVarExp = sum(numpy.square(abs(xLoadings))) / sum(sum(numpy.square(abs(X))))
+            yPercentVarExp = sum(numpy.square(abs(yLoadings))) / sum(sum(numpy.square(abs(Y))))
 
-        # Setup the object used to return the results.
-        returnObject = {}
-        returnObject["xLoadings"] = xLoadings
-        returnObject["yLoadings"] = yLoadings
-        returnObject["xScores"] = xScores
-        returnObject["yScores"] = yScores
-        returnObject["weights"] = weights
-        returnObject["coefficients"] = coefficients
-        returnObject["xPercentVarExp"] = xPercentVarExp
-        returnObject["yPercentVarExp"] = yPercentVarExp
+            # Setup the object used to return the results.
+            returnObject = {}
+            returnObject["xLoadings"] = xLoadings
+            returnObject["yLoadings"] = yLoadings
+            returnObject["xScores"] = xScores
+            returnObject["yScores"] = yScores
+            returnObject["weights"] = weights
+            returnObject["coefficients"] = coefficients
+            returnObject["xPercentVarExp"] = xPercentVarExp
+            returnObject["yPercentVarExp"] = yPercentVarExp
+        else:
+            # Run SIMPLS using the file system.
+            # TODO add the file system SIMPLS call
+            returnObject = {}
 
     return returnObject
