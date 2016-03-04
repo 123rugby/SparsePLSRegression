@@ -84,5 +84,5 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
 
         # Calculate coefficients.
         coefficients = weights.dot(yLoadings.T)
-        #coefficients = 
-        print(coefficients)
+        intercept = meanY - (meanX.dot(coefficients))
+        coefficients = numpy.vstack((intercept, coefficients))
