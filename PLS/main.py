@@ -43,6 +43,7 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
     # Process and validate the user's input. #
     #========================================#
     errorsFound = []  # List recording all error messages to display.
+
     if numObservationsX != numObservationsY:
         # X and Y must have the same number of rows.
         errorsFound.append("The first dimension of X and Y are not equal ({0:d} and {1:d}).".format(numObservationsX, numObservationsY))
@@ -115,3 +116,42 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
             returnObject = {}
 
     return returnObject
+
+
+def pls_cv_mem(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=True):
+    """Memory-based cross validation for PLS.
+
+    Performs no error checking on inputs. If error checking is desired, use the pls function.
+
+    :param X:
+    :type X:
+    :param Y:
+    :type Y:
+    :param numberComponents:
+    :type numberComponents:
+    :param cvFolds:
+    :type :cvFolds:
+    :param cvMethod:
+    :type cvMethod:
+    :param isCVStratified:
+    :type isCVStratified:
+    :returns :
+    :type :
+
+    """
+
+    # Determine dimensions of inputs.
+    [numObservationsX, numPredictors] = X.shape
+    yDimensions = Y.shape
+    if len(yDimensions) == 1:
+        # There is only one response variable (PLS1).
+        numObservationsY = Y.shape[0]
+        numResponses = 1
+    else:
+        # There are multiple response variables (PLS2).
+        [numObservationsY, numResponses] = Y.shape
+
+    # Generate the cross validation partitions.
+
+    # As each CV fold is smaller than the full dataset, it may not be possible to use the number of components requested.
+    # Determine this and use as many as we can.
