@@ -10,7 +10,7 @@ class CompletionTests(unittest.TestCase):
     def setUpClass(self):
         """Setup inputs needed for tests in the class."""
 
-        self.xSmall = numpy.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
+        self.xSmall = numpy.array([[4, 2, 3], [1, 5, 8], [7, 6, 9]])
         self.ySmall = numpy.array([2, 6, 4])
 
     def test_pass_small(self):
