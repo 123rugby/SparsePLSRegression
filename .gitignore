@@ -1,0 +1,6 @@
+# Ignore compiled Python files.
+*.pyc
+
+# Ignore Visual Studio files.
+*.pyproj
+*.vs
