@@ -1,4 +1,7 @@
+import collections
 import numpy
+import random
+import sys
 
 def partition_dataset(Y, cvFolds, isStratified=False):
     """Partition a dataset into CV folds.
@@ -24,8 +27,8 @@ def partition_dataset(Y, cvFolds, isStratified=False):
         # There are multiple response variables (PLS2).
         [numObservations, numResponses] = yDimensions
 
-    if isCVStratified:
-        # Create stratified partitions.
+    if isStratified:
+        # Create stratified partitions.        
         indicesOfClasses = []  # Class of each observation. indicesOfClasses[i] indicates the class of the ith observation.
         if numResponses == 1:
             # Y is a column vector, so determine classes from the unique values of Y.
@@ -42,13 +45,19 @@ def partition_dataset(Y, cvFolds, isStratified=False):
             # PLS2 is being performed. Each response variable is taken to be a class.
             nonzeroResponse = numpy.nonzero(Y)
             rowsWithValues = nonzeroResponse[0]
-            if len(set(rowsWithValues)) == len(rowsWithValues):
+            if len(set(rowsWithValues)) != len(rowsWithValues):
                 # There is at least one row with a value for multiple response variables. Stratified CV can therefore not be performed.
                 print("Stratified CV was requested, but there are observations with values for multiple response variables. There class can not be determined.")
                 sys.exit()
 
             # Determine the number of the class each observation belongs to.
             classMembership = nonzeroResponse[1].tolist()
+
+        # Generate a warning if any class has too few observations to be in all folds.
+        for i in set(classMembership):
+            occurences = classMembership.count(i)
+            if occurences < cvFolds:
+                print("WARNING: class {0:d} occurs {1:d} times, and will not appear in each of the {2:d} folds.".format(i, occurences, cvFolds))
 
         # Determine the partitions.
         # Start with a list of class memberships -> [0, 1, 2, 0, 0, 1, 0, 2, 1, 0, 2, 0, 0, 1, 2, 1, 0, 0]
@@ -65,24 +74,24 @@ def partition_dataset(Y, cvFolds, isStratified=False):
         classIndices = collections.defaultdict(list)  # Indices of the observations belonging to each class.
         for ind, i in enumerate(classMembership):
             classIndices[i].append(ind)
-        partition = [0] * numObservationsX  # Create the list to hold the partition number for each observation.
+        partition = [0] * numObservations  # Create the list to hold the partition number for each observation.
         for i in classIndices:
             random.shuffle(classIndices[i])  # Randomise the list of observations belonging to each class.
             classIndices[i] = [classIndices[i][j::cvFolds] for j in range(cvFolds)]  # Partition each class into cvFolds different groups.
-            for j in classIndices[i]
+            for ind, j in enumerate(classIndices[i]):
                 for k in j:
-                    partition[k] = i
+                    partition[k] = ind
     else:
         # Create random partitions where each partition has an equal number of observations.
         # Start with a list of the indices of the observations ->  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         # Randomise the list -> [7, 4, 8, 1, 5, 6, 9, 2, 3, 0]
         # Partition the indices -> [[7, 1, 9, 0], [4, 5, 2], [8, 6, 3]] (if cvFolds == 3)
         # Assign partition groupings according to original indices -> [0, 0, 1, 2, 1, 1, 2, 0, 2, 0]
-        observationIndices = list(range(numObservationsX))  # List containing the index of each observation.
+        observationIndices = list(range(numObservations))  # List containing the index of each observation.
         random.shuffle(observationIndices)  # Randomise the order of the indices.
         partitionedIndices = [observationIndices[i::cvFolds] for i in range(cvFolds)]  # Populate each partition with every nth observation.
-        partition = [0] * numObservationsX  # Create the list to hold the partition number for each observation.
-        for ind, i in enumerate(partitionIndices):
+        partition = [0] * numObservations  # Create the list to hold the partition number for each observation.
+        for ind, i in enumerate(partitionedIndices):
             for j in i:
                 partition[j] = ind
 
