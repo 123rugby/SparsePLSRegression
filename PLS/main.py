@@ -1,6 +1,6 @@
 import argparse
 import numpy
-import simpls
+import PLS.simpls
 
 def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=True, isMemUsed=True):
     """Perform PLS using the SIMPLS algorithm.
@@ -80,7 +80,7 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
         pass
     else:
         # Run PLS without cross validation.
-        xLoadings, yLoadings, xScores, yScores, weights = simpls.simpls(X, Y, numberComponents)
+        xLoadings, yLoadings, xScores, yScores, weights = PLS.simpls.simpls(X, Y, numberComponents)
 
         # Calculate coefficients.
         coefficients = weights.dot(yLoadings.T)
