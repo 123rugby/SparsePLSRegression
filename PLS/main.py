@@ -46,7 +46,7 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
     if numObservationsX != numObservationsY:
         # X and Y must have the same number of rows.
         errorsFound.append("The first dimension of X and Y are not equal ({0:d} and {1:d}).".format(numObservationsX, numObservationsY))
-    
+
     if numberComponents < 1:
         # There must be at least one hidden component used.
         errorsFound.append("The number of components must be at least one.")
@@ -86,3 +86,7 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
         coefficients = weights.dot(yLoadings.T)
         intercept = meanY - (meanX.dot(coefficients))
         coefficients = numpy.vstack((intercept, coefficients))
+
+        # Calculate the percentage of the variance of X and Y that is explained.
+        xPercentVarExp = sum(numpy.square(abs(xLoadings))) / sum(sum(numpy.square(abs(X))))
+        yPercentVarExp = sum(numpy.square(abs(yLoadings))) / sum(sum(numpy.square(abs(Y))))
