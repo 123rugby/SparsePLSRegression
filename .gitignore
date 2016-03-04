@@ -4,3 +4,6 @@
 # Ignore Visual Studio files.
 *.pyproj
 *.vs
+
+# Ignore PyCharm files.
+*.idea
