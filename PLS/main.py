@@ -1,8 +1,8 @@
 import numpy
+import PLS.center_and_store
 import PLS.partition_dataset
 import PLS.simpls
 import sys
-
 
 def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=True, isMemUsed=True):
     """Perform PLS using the SIMPLS algorithm.
@@ -85,8 +85,10 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
         X = X - meanX
         Y = Y - meanY
     else:
-        # TODO add centering via the not in memory method
-        pass
+        # Center the matrix and store it in a file.
+        matrixLocations = ["CenteredMatrix0.tsv", "CenteredMatrix1.tsv"]  # Two locations are needed in order to
+                                                                          # efficiently run PLS via a file.
+        isStoredByRow = PLS.center_and_store.center_and_store(X, matrixLocations[0])
 
     if isCVUsed:
         # Run PLS using cross validation.
