@@ -1,8 +1,8 @@
-import argparse
 import numpy
 import PLS.partition_dataset
 import PLS.simpls
 import sys
+
 
 def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=True, isMemUsed=True):
     """Perform PLS using the SIMPLS algorithm.
@@ -130,7 +130,7 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
     return returnObject
 
 
-def pls_cv_mem(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=True):
+def pls_cv_mem(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isStratified=True):
     """Memory-based cross validation for PLS.
 
     Performs no error checking on inputs. If error checking is desired, use the pls function.
@@ -145,8 +145,8 @@ def pls_cv_mem(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratif
     :type :cvFolds:
     :param cvMethod:
     :type cvMethod:
-    :param isCVStratified:
-    :type isCVStratified:
+    :param isStratified:
+    :type isStratified:
     :returns :
     :type :
 

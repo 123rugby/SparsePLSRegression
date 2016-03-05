@@ -1,5 +1,6 @@
 import numpy
 
+
 def simpls(X, Y, numberComponents=10):
     """Run the standard SIMPLS algorithm.
 

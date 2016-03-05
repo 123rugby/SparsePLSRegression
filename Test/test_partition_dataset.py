@@ -2,14 +2,15 @@ import numpy
 import PLS.partition_dataset
 import unittest
 
+
 class CompletionTests(unittest.TestCase):
     """Tests checking whether the code successfully returns."""
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Setup inputs needed for tests in the class."""
 
-        self.ySmall = numpy.array([[1, 0, 0], [0, 1, 0], [0, 1, 0], [1, 0, 0], [0, 0, 1], [0, 0, 1]])
+        cls.ySmall = numpy.array([[1, 0, 0], [0, 1, 0], [0, 1, 0], [1, 0, 0], [0, 0, 1], [0, 0, 1]])
 
     def test_pass_small(self):
         partition = PLS.partition_dataset.partition_dataset(self.ySmall, 2, False)

@@ -3,15 +3,16 @@ import PLS.main
 from scipy import sparse
 import unittest
 
+
 class CompletionTests(unittest.TestCase):
     """Tests checking whether the code successfully returns while running PLS2."""
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Setup inputs needed for tests in the class."""
 
-        self.xSmall = numpy.array([[4, 2, 3], [1, 5, 8], [7, 6, 9]])
-        self.ySmall = numpy.array([2, 6, 4])
+        cls.xSmall = numpy.array([[4, 2, 3], [1, 5, 8], [7, 6, 9]])
+        cls.ySmall = numpy.array([2, 6, 4])
 
     def test_pass_small(self):
         PLS.main.pls(self.xSmall, self.ySmall)

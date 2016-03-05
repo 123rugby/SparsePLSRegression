@@ -3,11 +3,12 @@ import PLS.simpls
 from scipy import sparse
 import unittest
 
+
 class CompletionTests(unittest.TestCase):
     """Tests checking whether the SIMPLS code successfully returns."""
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Setup inputs needed for tests in the class."""
 
         pass
