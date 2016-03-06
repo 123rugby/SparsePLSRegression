@@ -86,9 +86,9 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
         Y = Y - meanY
     else:
         # Center the matrix and store it in a file.
-        matrixLocations = ["CenteredMatrix0.tsv", "CenteredMatrix1.tsv"]  # Two locations are needed in order to
-                                                                          # efficiently run PLS via a file.
-        isStoredByRow = PLS.center_and_store.center_and_store(X, matrixLocations[0])
+        xLocation = "CenteredX.tsv"  # The location where the centered X matrix will be saved.
+        xTransLocation = "CenteredXTranspose.tsv"  # The location where the transpose of the centered X matrix will be saved.
+        isStoredByRow = PLS.center_and_store.center_and_store(X, xLocation, xTransLocation)
 
     if isCVUsed:
         # Run PLS using cross validation.
