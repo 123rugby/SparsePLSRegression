@@ -19,7 +19,7 @@ class CorrectnessTests(unittest.TestCase):
 
     pass
 
-    # These will primarily involve performing SIMPLS through my code and checking against Matlab results
+    # These will primarily involve performing SIMPLS through memory and the file system and checking the results
 
 
 if __name__ == '__main__':

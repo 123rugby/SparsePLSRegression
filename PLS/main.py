@@ -88,46 +88,46 @@ def pls(X, Y, numberComponents=10, cvFolds=0, cvMethod="MSE", isCVStratified=Tru
         # Center the matrix and store it in a file.
         xLocation = "CenteredX.tsv"  # The location where the centered X matrix will be saved.
         xTransLocation = "CenteredXTranspose.tsv"  # The location where the transpose of the centered X matrix will be saved.
-        isStoredByRow = PLS.center_and_store.center_and_store(X, xLocation, xTransLocation)
+        PLS.center_and_store.center_and_store(X, xLocation, xTransLocation)
 
+    # Run PLS.
+    returnObject = {}  # Object used to return the results.
     if isCVUsed:
         # Run PLS using cross validation.
         # TODO put in the cross validation running and determination of folds
         if isMemUsed:
             # Run CV using the memory-based SIMPLS.
-            returnObject = {}
+            pass
         else:
             # Run CV using the file system-based SIMPLS.
-            returnObject = {}
+            pass
     else:
         # Run PLS without cross validation.
         if isMemUsed:
             # Run SIMPLS without resorting to the file system.
-            xLoadings, yLoadings, xScores, yScores, weights = PLS.simpls.simpls(X, Y, numberComponents)
-
-            # Calculate coefficients.
-            coefficients = weights.dot(yLoadings.T)
-            intercept = meanY - (meanX.dot(coefficients))
-            coefficients = numpy.vstack((intercept, coefficients))
-
-            # Calculate the percentage of the variance of X and Y that is explained.
-            xPercentVarExp = sum(numpy.square(abs(xLoadings))) / sum(sum(numpy.square(abs(X))))
-            yPercentVarExp = sum(numpy.square(abs(yLoadings))) / sum(sum(numpy.square(abs(Y))))
-
-            # Setup the object used to return the results.
-            returnObject = {}
-            returnObject["xLoadings"] = xLoadings
-            returnObject["yLoadings"] = yLoadings
-            returnObject["xScores"] = xScores
-            returnObject["yScores"] = yScores
-            returnObject["weights"] = weights
-            returnObject["coefficients"] = coefficients
-            returnObject["xPercentVarExp"] = xPercentVarExp
-            returnObject["yPercentVarExp"] = yPercentVarExp
+            xLoadings, yLoadings, xScores, yScores, weights = PLS.simpls.simpls_mem(X, Y, numberComponents)
         else:
             # Run SIMPLS using the file system.
-            # TODO add the file system SIMPLS call
-            returnObject = {}
+            xLoadings, yLoadings, xScores, yScores, weights = PLS.simpls.simpls_mem(X, Y, numberComponents)
+
+        # Calculate coefficients.
+        coefficients = weights.dot(yLoadings.T)
+        intercept = meanY - (meanX.dot(coefficients))
+        coefficients = numpy.vstack((intercept, coefficients))
+
+        # Calculate the percentage of the variance of X and Y that is explained.
+        xPercentVarExp = sum(numpy.square(abs(xLoadings))) / sum(sum(numpy.square(abs(X))))
+        yPercentVarExp = sum(numpy.square(abs(yLoadings))) / sum(sum(numpy.square(abs(Y))))
+
+        # Setup the object used to return the results.
+        returnObject["xLoadings"] = xLoadings
+        returnObject["yLoadings"] = yLoadings
+        returnObject["xScores"] = xScores
+        returnObject["yScores"] = yScores
+        returnObject["weights"] = weights
+        returnObject["coefficients"] = coefficients
+        returnObject["xPercentVarExp"] = xPercentVarExp
+        returnObject["yPercentVarExp"] = yPercentVarExp
 
     return returnObject
 
