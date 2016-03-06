@@ -21,16 +21,16 @@ def center_and_store(matrix, fileMatrix, fileMatrixTranspose):
     # one column is on each line of the file. This will be done based on which dimension is smallest.
     [numRows, numCols] = matrix.shape
     with open(fileMatrix, 'w') as writeMatrix:
+        # Save the matrix with a row on each line.
+        for i in range(numRows):
+            centeredRow = matrix[i, :] - matrixMean  # Center the row.
+            centeredRow.tofile(writeMatrix, sep='\t')
+            writeMatrix.write('\n')
+    with open(fileMatrixTranspose, 'w') as writeMatrixTranspose:
         # Save the matrix with a column on each line.
         for i in range(numCols):
             centeredCol = matrix[:, i] - matrixMean[i]  # Center the column.
             centeredCol.reshape(numRows, 1)  # Reshape it to a column array (so it can be transposed).
             centeredCol = centeredCol.T
-            centeredCol.tofile(writeMatrix, sep='\t')
-            writeMatrix.write('\n')
-    with open(fileMatrixTranspose, 'w') as writeMatrixTranspose:
-        # Save the matrix with a row on each line.
-        for i in range(numRows):
-            centeredRow = matrix[i, :] - matrixMean  # Center the row.
-            centeredRow.tofile(writeMatrixTranspose, sep='\t')
+            centeredCol.tofile(writeMatrixTranspose, sep='\t')
             writeMatrixTranspose.write('\n')
