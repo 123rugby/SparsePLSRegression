@@ -1,26 +1,53 @@
 import numpy
-import PLS.center_and_store
-from scipy import sparse
+import os
+import PLS.dot_product
 import unittest
 
 
-class CompletionTests(unittest.TestCase):
-    """Tests checking whether the file based dot product code successfully returns."""
+class DotProductTests(unittest.TestCase):
+    """Tests to determine whether the file-based dot product returns acceptable results."""
 
-    @classmethod
-    def setUpClass(cls):
-        """Setup inputs needed for tests in the class."""
+    def test_correctness(self):
+        """Test whether the file and memory dot products return the same values."""
 
-        pass
+        # Generate the matrices to test.
+        matrices = []
+        matrices.append(numpy.random.rand(4, 5))
+        matrices.append(numpy.random.rand(5, 4))
+        matrices.append(numpy.random.rand(5, 5))
+        matrices.append(numpy.random.rand(10, 10))
+        matrices.append(numpy.random.rand(20, 20))
+        matrices.append(numpy.random.rand(50, 50))
+        matrices.append(numpy.random.rand(100, 100))
+        matrices.append(numpy.random.rand(1000, 1000))
 
+        # Test the matrices.
+        fileMatrix = "TestMatrixDot.txt"
+        fileMatrixTrans = "TestMatrixTransDot.txt"
+        comparisons = []
+        for i in matrices:
+            # Save the matrix (both transpose and not).
+            numpy.savetxt(fileMatrix, i, delimiter='\t')
+            numpy.savetxt(fileMatrixTrans, i.T, delimiter='\t')
 
-class CorrectnessTests(unittest.TestCase):
-    """Tests checking the correctness of the output."""
+            # Calculate the dot products.
+            [numRows, numCols] = i.shape
+            memDotProd = i.dot(i.T)
+            fileDotProd = PLS.dot_product.dot_product(fileMatrix, numRows, i.T, sep='\t')
+            memDotProdTrans = (i.T).dot(i)
+            fileDotProdTrans = PLS.dot_product.dot_product(fileMatrixTrans, numCols, i, sep='\t')
 
-    pass
+            # Determine whether the products are equivalent to 10 decimal places
+            # (and therefore basically the tolerance of float arithmetic).
+            comparisons.append(numpy.allclose(memDotProd, fileDotProd, rtol=0, atol=1e-10))
+            comparisons.append(numpy.allclose(memDotProdTrans, fileDotProdTrans, rtol=0, atol=1e-10))
 
-    # These will just be doing dot procuts of the (centerd) matrices in numpy, and then seeing whether saving
-    # and dot producting from the file gives te same answer (with some tolerance for loss of precision due to storage)
+        # Remove temporary files used.
+        os.remove(fileMatrix)
+        os.remove(fileMatrixTrans)
+
+        # Output result.
+        self.assertTrue(all(comparisons))
 
 
 if __name__ == '__main__':
